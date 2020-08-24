@@ -1,0 +1,4 @@
+packages:
+  - packages/*
+catalog:
+  nx: "22.5.2"
