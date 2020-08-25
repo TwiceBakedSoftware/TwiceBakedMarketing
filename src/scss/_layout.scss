@@ -28,7 +28,7 @@ mat-sidenav {
 }
 
 a.mat-list-item.active {
-    border-left: 4px solid var(--primary);
+    border-left: 4px solid var(--primary-light);
     background-color: var(--primary-transparent);
 }
 
@@ -63,11 +63,11 @@ app-sidebar {
 }
 
 .mat-drawer-container {
-    background-image: var(--background-gradient) !important;
-    background-size: 100% 400%;
-    transition: background-position-y 500ms;
+    background-color: var(--background-color) !important;
+    // background-size: 100% 400%;
+    transition: var(--background-color-transition);
 }
 
-.dark-theme .mat-drawer-container {
-    background-position-y: 100%;
+.mat-drawer {
+    transition: var(--background-color-transition);
 }

@@ -21,7 +21,8 @@
     aria-label="Example icon-button with share icon"
     (click)="darkToggle()"
   >
-    <mat-icon>nights_stay</mat-icon>
+    <mat-icon *ngIf="!darkMode">nights_stay</mat-icon>
+    <mat-icon *ngIf="darkMode">wb_sunny</mat-icon>
   </button>
   <!-- <button mat-raised-button (click)="auth.googleSignIn()" *ngIf="!(auth.loggedIn$| async) as loggedIn; else profileTemplate">Login</button>
   <ng-template #profileTemplate>

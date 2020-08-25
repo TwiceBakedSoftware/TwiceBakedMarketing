@@ -21,12 +21,12 @@ $theme:   mat-light-theme((
 
 
 // Define an alternate dark theme.
-$dark-primary: mat-palette($mat-blue-grey, 500, 300, 700);
+// $dark-primary: mat-palette($mat-blue-grey, 500, 300, 700);
 $dark-accent:  mat-palette($mat-amber, A200, A100, A400);
 $dark-warn:    mat-palette($mat-deep-orange);
 $dark-theme:   mat-dark-theme((
   color: (
-    primary: $dark-primary,
+    primary: $primary,
     accent: $dark-accent,
     warn: $dark-warn,
   )

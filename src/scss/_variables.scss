@@ -8,19 +8,20 @@ $accent-dark: #ff3d00;
 $primary-transparent: rgba($primary, 0.2);
 $accent-transparent: rgba($accent, 0.2);
 
-$dark-primary: #607d8b;
-$dark-primary-light: #90a4ae;
-$dark-primary-dark: #455a64;
+// $dark-primary: #607d8b;
+// $dark-primary-light: #90a4ae;
+// $dark-primary-dark: #455a64;
 $dark-accent:  #ffd740;
 $dark-accent-light: #ffe57f;
 $dark-accent-dark: #ffc400;
 
-$dark-primary-transparent: rgba($dark-primary, 0.2);
+// $dark-primary-transparent: rgba($dark-primary, 0.2);
 $dark-accent-transparent: rgba($dark-accent, 0.2);
 
-$background-gradient: linear-gradient(180deg, #fafafa, #fafafa, #303030, #303030);
+$background-color: #fafafa;
+$dark-background-color: #303030;
 
-:root {
+:root, .light-theme {
     --primary: #{$primary};
     --primary-light: #{$primary-light};
     --primary-dark: #{$primary-dark};
@@ -31,17 +32,20 @@ $background-gradient: linear-gradient(180deg, #fafafa, #fafafa, #303030, #303030
     --primary-transparent: #{$primary-transparent};
     --accent-transparent: #{$accent-transparent};
 
-    --background-gradient: #{$background-gradient};
+    --background-color: #{$background-color};
+    --background-color-transition: background-color 250ms ease-in-out;
 }
 
 .dark-theme {
-    --primary: #{$dark-primary};
-    --primary-light: #{$dark-primary-light};
-    --primary-dark: #{$dark-primary-dark};
+    // --primary: #{$dark-primary};
+    // --primary-light: #{$dark-primary-light};
+    // --primary-dark: #{$dark-primary-dark};
     --accent:  #{$dark-accent};
     --accent-light: #{$dark-accent-light};
     --accent-dark: #{$dark-accent-dark};
 
-    --primary-transparent: #{$dark-primary-transparent};
+    // --primary-transparent: #{$dark-primary-transparent};
     --accent-transparent: #{$dark-accent-transparent};
+
+    --background-color: #{$dark-background-color};
 }
