@@ -1,0 +1,67 @@
+import type { CaseStudy } from "./types";
+
+export const caseStudies: CaseStudy[] = [
+  {
+    slug: "service-business-intake-automation",
+    title: "Service Intake Automation",
+    sector: "Local services",
+    clientProfile: "25-person multi-location home services operator",
+    timeline: "6 weeks to first production release",
+    scope: "Intake standardization, triage assignment, and scheduling handoff",
+    challenge:
+      "Requests were coming from email, texts, and spreadsheets with no reliable way to track status.",
+    approach:
+      "We mapped intake to fulfillment, then built a single request pipeline with validation and role-based ownership.",
+    solution:
+      "A web app for intake forms, triage rules, scheduling handoff, and operational dashboards.",
+    outcomes: [
+      "40% faster request-to-scheduling cycle",
+      "Near-zero duplicate entries",
+      "Team visibility into bottlenecks by stage",
+    ],
+    tech: ["React", "TypeScript", "PostgreSQL", "Workflow automation"],
+    anonymizationNote: "Client details omitted by request.",
+  },
+  {
+    slug: "field-ops-crm-modernization",
+    title: "Field Ops CRM Modernization",
+    sector: "Field operations",
+    clientProfile: "40-person field service and account management team",
+    timeline: "8 weeks to shared ops hub rollout",
+    scope: "Customer record consolidation, follow-up workflows, and reporting",
+    challenge:
+      "Customer history and follow-ups lived in disconnected documents, causing missed renewals and slow service response.",
+    approach:
+      "We designed a unified data model and migration path from existing spreadsheets into a searchable operations hub.",
+    solution:
+      "Custom CRM-style internal app with account timelines, task queues, and reporting views for managers.",
+    outcomes: [
+      "30% reduction in follow-up delays",
+      "Faster onboarding for new coordinators",
+      "One shared operational record per customer",
+    ],
+    tech: ["React", "Node", "PostgreSQL", "Reporting"],
+    anonymizationNote: "Organization and customer data anonymized.",
+  },
+  {
+    slug: "compliance-form-standardization",
+    title: "Compliance Form Standardization",
+    sector: "Regulated back-office workflows",
+    clientProfile: "15-person compliance and submission operations team",
+    timeline: "5 weeks to validated forms launch",
+    scope: "Conditional forms, review gates, and audit-ready export workflow",
+    challenge:
+      "Compliance paperwork was manually assembled with inconsistent versions across teams.",
+    approach:
+      "We captured every required field and decision path, then replaced static docs with dynamic validated forms.",
+    solution:
+      "Internal forms platform with conditional fields, approval tracking, and exportable audit records.",
+    outcomes: [
+      "50% reduction in revision cycles",
+      "Improved audit-readiness across submissions",
+      "Higher first-pass completion rates",
+    ],
+    tech: ["React", "TypeScript", "Audit logging", "Role permissions"],
+    anonymizationNote: "All identifying information has been generalized.",
+  },
+];

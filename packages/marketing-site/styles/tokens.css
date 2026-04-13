@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════
+   TwiceBakedSoftware · Hearth design tokens
+   Single source of truth. Light + dark via [data-theme].
+   Component CSS must reference these, never raw hex.
+   ═════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Type families ── */
+  --tb-ff-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --tb-ff-body: "Fraunces", Georgia, "Times New Roman", serif;
+  --tb-ff-label: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ── Fluid type scale ──
+     Step 0 = body, step 7 = hero display. */
+  --tb-step--2: clamp(10px, 0.72rem + 0.1vw, 11px);
+  --tb-step--1: clamp(12px, 0.82rem + 0.1vw, 13px);
+  --tb-step-0: clamp(15px, 0.95rem + 0.15vw, 17px);
+  --tb-step-1: clamp(18px, 1.05rem + 0.3vw, 21px);
+  --tb-step-2: clamp(22px, 1.2rem + 0.5vw, 26px);
+  --tb-step-3: clamp(28px, 1.5rem + 0.8vw, 36px);
+  --tb-step-4: clamp(36px, 2.1rem + 1.2vw, 52px);
+  --tb-step-5: clamp(48px, 3rem + 1.6vw, 78px);
+  --tb-step-6: clamp(58px, 3.6rem + 2.4vw, 108px);
+  --tb-step-7: clamp(68px, 4.4rem + 4.4vw, 168px);
+
+  /* ── Spacing (8px rhythm) ── */
+  --tb-sp-1: 8px;
+  --tb-sp-2: 16px;
+  --tb-sp-3: 24px;
+  --tb-sp-4: 36px;
+  --tb-sp-5: 56px;
+  --tb-sp-6: 80px;
+  --tb-sp-7: 120px;
+  --tb-sp-8: 180px;
+
+  /* ── Radii ── */
+  --tb-r-1: 2px;
+  --tb-r-2: 6px;
+  --tb-r-3: 14px;
+  --tb-r-full: 999px;
+
+  /* ── Motion ── */
+  --tb-t-fast: 0.2s ease;
+  --tb-t-base: 0.35s ease;
+  --tb-t-slow: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Container ── */
+  --tb-content-width: min(1280px, calc(100vw - 2 * var(--tb-gutter, 2.5rem)));
+  --tb-gutter: 2.5rem;
+}
+
+/* ═══ LIGHT · Hearth ══════════════════════════════ */
+[data-theme="light"],
+:root {
+  --tb-bg: #f8efdc;
+  --tb-bg-hi: #fdf7e8;
+  --tb-bg-lo: #efe3c6;
+  --tb-bg-inset: #f3e8ce;
+
+  --tb-ink: #221610;
+  --tb-ink-soft: #5a4434;
+  --tb-ink-mute: #8a7461;
+
+  --tb-accent: #b5401f;
+  --tb-accent-deep: #7a260c;
+  --tb-accent-soft: #c88c3c;
+
+  --tb-rule: rgb(34 22 16 / 16%);
+  --tb-rule-soft: rgb(34 22 16 / 8%);
+
+  --tb-warmth-a: rgb(255 247 232 / 90%);
+  --tb-warmth-b: rgb(181 64 31 / 8%);
+
+  --tb-noise-blend: multiply;
+  --tb-noise-alpha: 0.09;
+
+  --tb-shadow-soft: 0 20px 50px -28px rgb(34 22 16 / 35%);
+  --tb-shadow-pill:
+    0 30px 70px -20px rgb(34 22 16 / 55%), 0 4px 14px rgb(34 22 16 / 20%);
+}
+
+/* ═══ DARK · Atelier folded into Hearth ═════════ */
+[data-theme="dark"] {
+  --tb-bg: #0f1210;
+  --tb-bg-hi: #161a17;
+  --tb-bg-lo: #080a09;
+  --tb-bg-inset: #13171403;
+
+  --tb-ink: #f2ebdb;
+  --tb-ink-soft: #cfc8b5;
+  --tb-ink-mute: #78736a;
+
+  --tb-accent: #c9a25b;
+  --tb-accent-deep: #e0b76a;
+  --tb-accent-soft: #3e7a55;
+
+  --tb-rule: rgb(242 235 219 / 14%);
+  --tb-rule-soft: rgb(242 235 219 / 6%);
+
+  --tb-warmth-a: rgb(62 122 85 / 18%);
+  --tb-warmth-b: rgb(201 162 91 / 10%);
+
+  --tb-noise-blend: screen;
+  --tb-noise-alpha: 0.06;
+
+  --tb-shadow-soft: 0 20px 60px -28px rgb(0 0 0 / 70%);
+  --tb-shadow-pill:
+    0 30px 80px -30px rgb(0 0 0 / 80%), 0 0 0 1px rgb(201 162 91 / 8%);
+}
