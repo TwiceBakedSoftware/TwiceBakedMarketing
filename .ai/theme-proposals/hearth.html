@@ -1,0 +1,1601 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Twice Baked Software — Hearth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=DM+Sans:opsz,wght@9..40,400..600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ═══ TOKENS ═══════════════════════════════════ */
+      :root {
+        /* type */
+        --ff-display: "Fraunces", Georgia, serif;
+        --ff-body: "Fraunces", Georgia, serif;
+        --ff-label: "DM Sans", system-ui, sans-serif;
+
+        /* scale */
+        --step--2: clamp(10px, 0.72rem + 0.1vw, 11px);
+        --step--1: clamp(12px, 0.82rem + 0.1vw, 13px);
+        --step-0: clamp(15px, 0.95rem + 0.15vw, 17px);
+        --step-1: clamp(18px, 1.05rem + 0.3vw, 21px);
+        --step-2: clamp(22px, 1.2rem + 0.5vw, 26px);
+        --step-3: clamp(28px, 1.5rem + 0.8vw, 36px);
+        --step-4: clamp(36px, 2.1rem + 1.2vw, 52px);
+        --step-5: clamp(48px, 3rem + 1.6vw, 78px);
+        --step-6: clamp(64px, 4rem + 3vw, 124px);
+        --step-7: clamp(72px, 5rem + 5vw, 188px);
+
+        /* spacing */
+        --sp-1: 8px;
+        --sp-2: 16px;
+        --sp-3: 24px;
+        --sp-4: 36px;
+        --sp-5: 56px;
+        --sp-6: 80px;
+        --sp-7: 120px;
+        --sp-8: 180px;
+
+        /* radii */
+        --r-1: 2px;
+        --r-2: 6px;
+        --r-3: 14px;
+        --r-full: 999px;
+
+        /* motion */
+        --t-fast: 0.2s ease;
+        --t-base: 0.35s ease;
+        --t-slow: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* ═══ LIGHT (Hearth) ═══════════════════════════ */
+      [data-theme="light"] {
+        --bg: #f8efdc;
+        --bg-hi: #fdf7e8;
+        --bg-lo: #efe3c6;
+        --ink: #221610;
+        --ink-soft: #5a4434;
+        --ink-mute: #8a7461;
+        --accent: #b5401f;
+        --accent-deep: #7a260c;
+        --accent-soft: #c88c3c;
+        --rule: rgba(34, 22, 16, 0.16);
+        --rule-soft: rgba(34, 22, 16, 0.08);
+        --noise-mix: multiply;
+        --noise-alpha: 0.09;
+        --noise-rgb: "0.13 0 0 0 0.09 0 0 0 0 0.06 0";
+        --warmth-a: rgba(255, 247, 232, 0.9);
+        --warmth-b: rgba(181, 64, 31, 0.08);
+        --shadow-sw: 0 30px 70px -20px rgba(34, 22, 16, 0.55),
+          0 4px 14px rgba(34, 22, 16, 0.2);
+      }
+
+      /* ═══ DARK (Atelier) ═══════════════════════════ */
+      [data-theme="dark"] {
+        --bg: #0f1210;
+        --bg-hi: #161a17;
+        --bg-lo: #080a09;
+        --ink: #f2ebdb;
+        --ink-soft: #cfc8b5;
+        --ink-mute: #78736a;
+        --accent: #c9a25b;
+        --accent-deep: #e0b76a;
+        --accent-soft: #3e7a55;
+        --rule: rgba(242, 235, 219, 0.14);
+        --rule-soft: rgba(242, 235, 219, 0.06);
+        --noise-mix: screen;
+        --noise-alpha: 0.06;
+        --noise-rgb: "1 0 0 0 1 0 0 0 1 0";
+        --warmth-a: rgba(62, 122, 85, 0.16);
+        --warmth-b: rgba(201, 162, 91, 0.1);
+        --shadow-sw: 0 30px 80px -30px rgba(0, 0, 0, 0.8),
+          0 0 0 1px rgba(201, 162, 91, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 40px;
+      }
+
+      html,
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--ff-body);
+        font-variation-settings:
+          "opsz" 14,
+          "SOFT" 50;
+        font-size: var(--step-0);
+        line-height: 1.6;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        transition:
+          background-color var(--t-base),
+          color var(--t-base);
+      }
+
+      ::selection {
+        background: var(--accent);
+        color: var(--bg-hi);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* paper wash + grain */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            ellipse 60% 40% at 15% 0%,
+            var(--warmth-a),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 70% 50% at 85% 100%,
+            var(--bg-lo),
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 50% 30% at 85% 20%,
+            var(--warmth-b),
+            transparent 60%
+          );
+        z-index: 0;
+        transition: opacity var(--t-base);
+      }
+      [data-theme="light"] body::before,
+      [data-theme="dark"] body::before {
+        /* keeps the gradient re-evaluating tokens */
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+      [data-theme="light"] body::after {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.09 0 0 0 0 0.06 0 0 0 0.11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        mix-blend-mode: multiply;
+      }
+      [data-theme="dark"] body::after {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 0.95 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        mix-blend-mode: screen;
+      }
+
+      main,
+      header,
+      footer {
+        position: relative;
+        z-index: 2;
+      }
+
+      .wrap {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 var(--sp-5);
+      }
+
+      .label {
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-weight: 500;
+      }
+
+      .display-italic {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+
+      /* ═══ MARGINALIA ═══════════════════════════ */
+      .marginalia {
+        position: fixed;
+        z-index: 4;
+        font-family: var(--ff-label);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--ink-mute);
+        pointer-events: none;
+        opacity: 0.7;
+        transition: color var(--t-base);
+      }
+      .marginalia em {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--accent);
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 13px;
+      }
+      .marginalia.tl {
+        top: 32px;
+        left: 32px;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+      }
+      .marginalia.tr {
+        top: 32px;
+        right: 32px;
+        writing-mode: vertical-rl;
+      }
+      .marginalia.bl {
+        bottom: 128px;
+        left: 32px;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+      }
+      @media (max-width: 1180px) {
+        .marginalia {
+          display: none;
+        }
+      }
+
+      /* ═══ HEADER ═══════════════════════════ */
+      header {
+        padding-top: var(--sp-4);
+      }
+      .nav {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding-bottom: var(--sp-3);
+        border-bottom: 1px solid var(--rule);
+        transition: border-color var(--t-base);
+      }
+      .logo {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: var(--step-1);
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--accent);
+      }
+      .logo-mark {
+        width: 26px;
+        height: 26px;
+        color: var(--accent);
+      }
+
+      .nav-center {
+        display: flex;
+        gap: var(--sp-4);
+        list-style: none;
+        justify-self: center;
+      }
+      .nav-center a {
+        color: var(--ink);
+        text-decoration: none;
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        padding-bottom: 4px;
+        border-bottom: 1px solid transparent;
+        transition: border-color var(--t-fast);
+      }
+      .nav-center a:hover {
+        border-bottom-color: var(--accent);
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-3);
+        justify-self: end;
+      }
+      .mode-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        background: var(--bg-hi);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-full);
+        padding: 3px;
+        transition:
+          background-color var(--t-base),
+          border-color var(--t-base);
+      }
+      .mode-toggle button {
+        background: none;
+        border: none;
+        padding: 7px 13px;
+        border-radius: var(--r-full);
+        color: var(--ink-mute);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: var(--ff-label);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 600;
+        transition: all var(--t-fast);
+      }
+      .mode-toggle button svg {
+        width: 12px;
+        height: 12px;
+      }
+      .mode-toggle button:hover {
+        color: var(--ink);
+      }
+      .mode-toggle button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .nav-cta {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-style: italic;
+        font-weight: 400;
+        font-size: var(--step-1);
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 3px;
+      }
+
+      /* ═══ HERO ═══════════════════════════ */
+      .hero {
+        padding: var(--sp-7) 0 var(--sp-7);
+        display: grid;
+        grid-template-columns: 8fr 4fr;
+        gap: var(--sp-6);
+        position: relative;
+      }
+      .hero-chapter {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: var(--sp-4);
+        color: var(--ink-soft);
+      }
+      .hero-chapter::before {
+        content: "";
+        width: 48px;
+        height: 1px;
+        background: var(--accent);
+      }
+
+      h1.hero-title {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30,
+          "WONK" 0;
+        font-weight: 300;
+        font-size: var(--step-7);
+        line-height: 0.86;
+        letter-spacing: -0.04em;
+        position: relative;
+      }
+      h1.hero-title .line {
+        display: block;
+        position: relative;
+        isolation: isolate;
+      }
+      h1.hero-title em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+      h1.hero-title .echo {
+        color: transparent;
+        -webkit-text-stroke: 1px var(--accent);
+        opacity: 0.35;
+        position: absolute;
+        top: 0.04em;
+        left: 0.04em;
+        z-index: -1;
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        pointer-events: none;
+      }
+
+      /* wheat in margin */
+      .hero-wheat {
+        position: absolute;
+        top: 160px;
+        right: 0;
+        width: 64px;
+        height: 220px;
+        color: var(--accent-soft);
+        opacity: 0.55;
+        pointer-events: none;
+        transform: rotate(3deg);
+        transform-origin: bottom center;
+      }
+
+      .hero-right {
+        padding-top: var(--sp-7);
+        position: relative;
+      }
+      .hero-seal {
+        width: 140px;
+        height: 140px;
+        margin-bottom: var(--sp-4);
+        color: var(--ink);
+        animation: slow-spin 80s linear infinite;
+      }
+      @keyframes slow-spin {
+        to { transform: rotate(360deg); }
+      }
+      .hero-seal text {
+        font-family: var(--ff-label);
+        font-size: 9.5px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        fill: currentColor;
+      }
+      .hero-seal .ring {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1;
+      }
+      .hero-seal .mark {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-size: 42px;
+        fill: var(--accent);
+      }
+
+      .hero-caption {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 48,
+          "SOFT" 50;
+        font-size: var(--step-1);
+        line-height: 1.55;
+        color: var(--ink);
+        max-width: 30ch;
+      }
+      .hero-caption::first-letter {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--accent);
+        font-size: 86px;
+        line-height: 0.75;
+        float: left;
+        margin: 10px 12px -4px 0;
+      }
+      .hero-signature {
+        margin-top: var(--sp-3);
+        display: flex;
+        align-items: baseline;
+        gap: var(--sp-2);
+        padding-top: var(--sp-2);
+        border-top: 1px solid var(--rule);
+      }
+      .hero-signature em {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-size: var(--step-2);
+        color: var(--ink);
+        font-weight: 400;
+      }
+      .hero-signature .label {
+        color: var(--ink-mute);
+      }
+
+      .hero-actions {
+        margin-top: var(--sp-6);
+        padding-top: var(--sp-4);
+        border-top: 1px solid var(--rule);
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--sp-4);
+        flex-wrap: wrap;
+      }
+      .hero-actions-left {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-4);
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: var(--bg);
+        padding: 22px 36px;
+        border-radius: var(--r-1);
+        text-decoration: none;
+        font-family: var(--ff-label);
+        font-weight: 500;
+        font-size: var(--step--1);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        transition: all var(--t-base);
+      }
+      .btn-primary:hover {
+        background: var(--accent-deep);
+        color: var(--bg-hi);
+        transform: translateY(-1px);
+      }
+      .btn-primary::after {
+        content: "→";
+        font-size: 16px;
+      }
+      .btn-ghost {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: var(--step-2);
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--ink);
+        padding-bottom: 3px;
+      }
+
+      /* ═══ SPECIMEN BAR ═══════════════════════ */
+      .specimen {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        border-top: 1px solid var(--rule);
+        border-bottom: 1px solid var(--rule);
+      }
+      .specimen > div {
+        padding: var(--sp-4) var(--sp-4) var(--sp-4) 0;
+        border-right: 1px solid var(--rule);
+      }
+      .specimen > div:last-child {
+        border-right: none;
+      }
+      .specimen > div + div {
+        padding-left: var(--sp-4);
+      }
+      .specimen .label {
+        color: var(--ink-mute);
+        margin-bottom: 10px;
+      }
+      .specimen strong {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-style: italic;
+        font-size: var(--step-3);
+        color: var(--ink);
+      }
+
+      /* ═══ FLEURON DIVIDER ═══════════════════ */
+      .fleuron {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--sp-6) 0;
+        color: var(--accent);
+      }
+      .fleuron::before,
+      .fleuron::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--rule);
+      }
+      .fleuron svg {
+        width: 36px;
+        height: 18px;
+        margin: 0 var(--sp-3);
+      }
+
+      /* ═══ SERVICES ═══════════════════════ */
+      .services {
+        padding: var(--sp-6) 0 var(--sp-5);
+      }
+      .section-head {
+        display: grid;
+        grid-template-columns: 1fr 2.2fr;
+        gap: var(--sp-5);
+        align-items: end;
+        margin-bottom: var(--sp-7);
+      }
+      .section-head .section-label {
+        color: var(--accent);
+      }
+      .section-head .section-label span {
+        display: block;
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--ink-mute);
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: var(--step-1);
+        margin-top: 10px;
+      }
+      h2.section-title {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        font-weight: 300;
+        font-size: var(--step-6);
+        line-height: 0.92;
+        letter-spacing: -0.028em;
+      }
+      h2.section-title em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+
+      .service-list {
+        list-style: none;
+      }
+      .service-list li {
+        display: grid;
+        grid-template-columns: 80px 1.4fr 2fr 1fr;
+        gap: var(--sp-4);
+        padding: var(--sp-5) 0;
+        border-top: 1px solid var(--rule);
+        align-items: baseline;
+        position: relative;
+        transition: padding var(--t-slow);
+      }
+      .service-list li:last-child {
+        border-bottom: 1px solid var(--rule);
+      }
+      .service-list li:hover {
+        padding-left: 24px;
+      }
+      .service-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 1px;
+        background: var(--accent);
+        transition: width var(--t-slow);
+      }
+      .service-list li:hover::before {
+        width: 16px;
+      }
+      .service-num {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 300;
+        font-size: var(--step-4);
+        color: var(--accent);
+        line-height: 1;
+      }
+      .service-name {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60;
+        font-weight: 400;
+        font-size: var(--step-4);
+        line-height: 1;
+        letter-spacing: -0.015em;
+      }
+      .service-desc {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: var(--step-0);
+        line-height: 1.65;
+        color: var(--ink-soft);
+      }
+      .service-meta {
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--ink-mute);
+        text-align: right;
+      }
+      .service-meta span {
+        display: block;
+        margin-bottom: 6px;
+      }
+      .service-meta em {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: var(--step-0);
+        color: var(--ink);
+      }
+
+      /* ═══ ENGAGEMENTS ═══════════════════════ */
+      .engagements {
+        padding: var(--sp-7) 0 var(--sp-6);
+      }
+      .engagements-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: var(--sp-5);
+        flex-wrap: wrap;
+        gap: var(--sp-2);
+      }
+      .engagements-head h3 {
+        font-family: var(--ff-display);
+        font-weight: 300;
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-size: var(--step-4);
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+      .engagements-head h3 em {
+        color: var(--accent);
+      }
+      .engagements-head .label {
+        color: var(--accent);
+      }
+      .engagements-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0;
+      }
+      .engagements-list li {
+        padding: var(--sp-3) var(--sp-4) var(--sp-4) 0;
+        border-top: 1px solid var(--rule);
+        position: relative;
+      }
+      .engagements-list li + li {
+        padding-left: var(--sp-4);
+        border-left: 1px solid var(--rule);
+      }
+      .engagements-list .year {
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .engagements-list h4 {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60;
+        font-weight: 400;
+        font-size: var(--step-3);
+        line-height: 1.1;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+      .engagements-list p {
+        font-size: var(--step--1);
+        line-height: 1.55;
+        color: var(--ink-soft);
+        max-width: 34ch;
+      }
+      .engagements-list .disc {
+        display: inline-block;
+        margin-top: 14px;
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-size: var(--step-0);
+        color: var(--accent);
+      }
+
+      /* ═══ PULL QUOTE with twice motif ═══════ */
+      .pull {
+        padding: var(--sp-8) 0;
+        text-align: center;
+        position: relative;
+      }
+      .pull .twice-motif {
+        width: 92px;
+        height: 92px;
+        color: var(--accent);
+        margin: 0 auto var(--sp-4);
+        opacity: 0.9;
+      }
+      .pull blockquote {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 50;
+        font-weight: 300;
+        font-size: var(--step-6);
+        line-height: 1.05;
+        letter-spacing: -0.023em;
+        max-width: 18ch;
+        margin: 0 auto;
+      }
+      .pull blockquote em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--accent);
+      }
+      .pull cite {
+        display: block;
+        margin-top: var(--sp-5);
+        font-style: normal;
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--ink-mute);
+      }
+
+      /* ═══ PROCESS ═══════════════════════ */
+      .process {
+        padding: var(--sp-7) var(--sp-5);
+        margin: 0 calc(var(--sp-5) * -1);
+        background: linear-gradient(
+          180deg,
+          var(--bg-lo),
+          var(--bg) 80%
+        );
+        border-top: 1px solid var(--rule);
+        border-bottom: 1px solid var(--rule);
+        position: relative;
+      }
+      [data-theme="dark"] .process {
+        background: linear-gradient(
+          180deg,
+          var(--bg-hi),
+          var(--bg) 80%
+        );
+      }
+      .process-inner {
+        max-width: 1208px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 5fr 7fr;
+        gap: var(--sp-6);
+      }
+      .process-inner .section-label {
+        color: var(--accent);
+      }
+      .process h2 {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        font-weight: 300;
+        font-size: var(--step-6);
+        line-height: 0.9;
+        letter-spacing: -0.03em;
+        margin-top: 20px;
+      }
+      .process h2 em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+      .process-body {
+        padding-top: 24px;
+      }
+      .process-body p {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: var(--step-1);
+        line-height: 1.62;
+        color: var(--ink);
+        max-width: 52ch;
+      }
+      .process-body p + p {
+        margin-top: 24px;
+      }
+      .process-body p.lede::first-letter {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+        font-size: 92px;
+        line-height: 0.75;
+        float: left;
+        margin: 12px 14px -2px 0;
+      }
+      .process-flame {
+        position: absolute;
+        bottom: var(--sp-4);
+        right: var(--sp-4);
+        width: 48px;
+        height: 48px;
+        color: var(--accent);
+        opacity: 0.6;
+      }
+
+      /* ═══ CTA ═══════════════════════ */
+      .cta {
+        padding: var(--sp-8) 0;
+        text-align: center;
+      }
+      .cta .section-label {
+        color: var(--accent);
+        margin-bottom: var(--sp-4);
+      }
+      .cta h2 {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        font-weight: 300;
+        font-size: var(--step-7);
+        line-height: 0.9;
+        letter-spacing: -0.035em;
+        max-width: 14ch;
+        margin: 0 auto var(--sp-5);
+      }
+      .cta h2 em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+      .cta p {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: var(--step-1);
+        color: var(--ink-soft);
+        max-width: 44ch;
+        margin: 0 auto var(--sp-5);
+      }
+      .cta a.mail {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: var(--step-5);
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 8px;
+        transition: color var(--t-base);
+      }
+      .cta a.mail:hover {
+        color: var(--accent);
+      }
+
+      /* ═══ FOOTER ═══════════════════════ */
+      footer {
+        padding: var(--sp-5) 0 var(--sp-7);
+        border-top: 1px solid var(--rule);
+        font-family: var(--ff-label);
+        font-size: var(--step--1);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--ink-mute);
+      }
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      footer em {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: var(--step-1);
+        color: var(--accent);
+      }
+
+      /* ═══ THEME SWITCHER (bottom) ═══════ */
+      .theme-switcher {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+        background: #1a1410;
+        color: #fdf7e8;
+        padding: 7px;
+        border-radius: var(--r-full);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: var(--shadow-sw);
+        display: flex;
+        gap: 2px;
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+      }
+      [data-theme="dark"] .theme-switcher {
+        background: #080a09;
+        border-color: rgba(242, 235, 219, 0.1);
+      }
+      .theme-switcher a {
+        color: rgba(253, 247, 232, 0.55);
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: var(--r-full);
+        white-space: nowrap;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition: color var(--t-fast), background-color var(--t-fast);
+      }
+      .theme-switcher a:hover {
+        color: #fdf7e8;
+      }
+      .theme-switcher a.active {
+        background: var(--accent);
+        color: #fdf7e8;
+      }
+      .theme-switcher-label {
+        padding: 10px 4px 10px 14px;
+        color: rgba(253, 247, 232, 0.3);
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        align-self: center;
+      }
+
+      @media (max-width: 720px) {
+        .mode-toggle button {
+          font-size: 0;
+          padding: 9px 11px;
+          gap: 0;
+        }
+        .mode-toggle button svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+      @media (max-width: 960px) {
+        .wrap {
+          padding: 0 28px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 60px;
+          padding: 80px 0 60px;
+        }
+        .hero-right {
+          padding-top: 0;
+        }
+        .hero-wheat {
+          display: none;
+        }
+        .nav {
+          grid-template-columns: 1fr auto;
+          gap: var(--sp-2);
+        }
+        .nav-center {
+          display: none;
+        }
+        .service-list li {
+          grid-template-columns: 60px 1fr;
+          gap: 20px;
+        }
+        .service-desc,
+        .service-meta {
+          grid-column: 2;
+          text-align: left;
+        }
+        .specimen {
+          grid-template-columns: 1fr 1fr;
+        }
+        .specimen > div {
+          border-right: none;
+          border-bottom: 1px solid var(--rule);
+        }
+        .section-head,
+        .process-inner,
+        .engagements-list {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .engagements-list li + li {
+          padding-left: 0;
+          border-left: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ SVG SYMBOL LIBRARY ═══ -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <!-- logo mark: simple filled circle inside ring -->
+        <symbol id="i-logo" viewBox="0 0 26 26">
+          <circle cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="13" cy="13" r="4" fill="currentColor"/>
+        </symbol>
+
+        <!-- wheat stalk: hand-drawn single stroke -->
+        <symbol id="i-wheat" viewBox="0 0 70 220" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 35 220 Q 34 150 36 90 Q 37 50 36 18" />
+          <!-- top grain -->
+          <path d="M 36 18 Q 40 10 36 2 Q 32 10 36 18 Z" fill="currentColor" fill-opacity="0.15"/>
+          <!-- grain pairs descending -->
+          <path d="M 36 35 Q 50 28 46 14"/>
+          <path d="M 36 35 Q 22 28 26 14"/>
+          <path d="M 35 52 Q 52 45 49 28"/>
+          <path d="M 35 52 Q 18 45 21 28"/>
+          <path d="M 35 70 Q 53 63 50 44"/>
+          <path d="M 35 70 Q 17 63 20 44"/>
+          <path d="M 35 90 Q 54 83 51 62"/>
+          <path d="M 35 90 Q 16 83 19 62"/>
+          <path d="M 36 112 Q 55 105 52 82"/>
+          <path d="M 36 112 Q 17 105 20 82"/>
+          <path d="M 36 134 Q 54 127 51 103"/>
+          <path d="M 36 134 Q 18 127 21 103"/>
+        </symbol>
+
+        <!-- twice motif: two offset circles -->
+        <symbol id="i-twice" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="54" cy="54" r="44"/>
+          <circle cx="66" cy="66" r="44"/>
+          <circle cx="60" cy="60" r="2" fill="currentColor"/>
+        </symbol>
+
+        <!-- flame / hearth ornament -->
+        <symbol id="i-flame" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 24 44 Q 8 36 12 22 Q 16 30 18 26 Q 18 14 24 4 Q 26 16 32 20 Q 38 14 38 26 Q 42 34 36 40 Q 30 44 24 44 Z"/>
+          <path d="M 24 40 Q 17 34 20 26 Q 24 32 26 28 Q 28 22 30 28 Q 33 34 28 38 Q 26 40 24 40 Z" fill="currentColor" fill-opacity="0.15"/>
+        </symbol>
+
+        <!-- fleuron divider -->
+        <symbol id="i-fleuron" viewBox="0 0 72 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <circle cx="36" cy="9" r="4" fill="currentColor"/>
+          <circle cx="20" cy="9" r="1.5" fill="currentColor"/>
+          <circle cx="52" cy="9" r="1.5" fill="currentColor"/>
+          <path d="M 4 9 Q 14 2 18 9"/>
+          <path d="M 4 9 Q 14 16 18 9"/>
+          <path d="M 68 9 Q 58 2 54 9"/>
+          <path d="M 68 9 Q 58 16 54 9"/>
+        </symbol>
+
+        <!-- sun icon -->
+        <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+        </symbol>
+
+        <!-- moon icon -->
+        <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 14.5A8 8 0 019.5 4a7 7 0 1010.5 10.5z"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="marginalia tl" aria-hidden="true">Twice Baked · MMXXVI · <em>hearth</em></div>
+    <div class="marginalia tr" aria-hidden="true">N° 01 / The Studio</div>
+    <div class="marginalia bl" aria-hidden="true">Set in Fraunces &amp; DM Sans</div>
+
+    <div class="wrap">
+      <header>
+        <nav class="nav">
+          <div class="logo">
+            <svg class="logo-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+            Twice <em>Baked</em> Software
+          </div>
+          <ul class="nav-center">
+            <li><a href="#services">Practice</a></li>
+            <li><a href="#engagements">Work</a></li>
+            <li><a href="#process">Method</a></li>
+            <li><a href="tokens.html">Tokens</a></li>
+          </ul>
+          <div class="nav-right">
+            <div class="mode-toggle" role="group" aria-label="Theme mode">
+              <button data-mode="light" aria-pressed="true">
+                <svg aria-hidden="true"><use href="#i-sun"/></svg>Light
+              </button>
+              <button data-mode="dark" aria-pressed="false">
+                <svg aria-hidden="true"><use href="#i-moon"/></svg>Dark
+              </button>
+            </div>
+            <a class="nav-cta" href="#contact">Begin →</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-left">
+            <div class="hero-chapter">
+              <span class="label">Chapter One · The Studio</span>
+            </div>
+            <h1 class="hero-title">
+              <span class="line">Software,</span>
+              <span class="line">
+                baked<span class="echo" aria-hidden="true">baked</span>
+              </span>
+              <span class="line"><em>twice.</em></span>
+            </h1>
+          </div>
+
+          <svg class="hero-wheat" aria-hidden="true"><use href="#i-wheat"/></svg>
+
+          <aside class="hero-right">
+            <svg class="hero-seal" viewBox="0 0 160 160" aria-hidden="true">
+              <defs>
+                <path id="sealPath" d="M 80,80 m -62,0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0"/>
+              </defs>
+              <circle class="ring" cx="80" cy="80" r="74"/>
+              <circle class="ring" cx="80" cy="80" r="68"/>
+              <text>
+                <textPath href="#sealPath" startOffset="0">
+                  TWICE BAKED SOFTWARE · EST MMXXVI · A BOUTIQUE OF TWO ·
+                </textPath>
+              </text>
+              <text x="80" y="94" text-anchor="middle" class="mark">tb</text>
+            </svg>
+            <p class="hero-caption">
+              A boutique software studio making custom web apps and
+              internal tools for small businesses — first by hand, then
+              by hand again.
+            </p>
+            <div class="hero-signature">
+              <span class="label">Penned by</span>
+              <em>The studio</em>
+            </div>
+          </aside>
+
+          <div class="hero-actions">
+            <div class="hero-actions-left">
+              <a class="btn-primary" href="#contact">Begin a project</a>
+              <a class="btn-ghost" href="#services">See the practice →</a>
+            </div>
+            <div class="label" style="color: var(--ink-mute)">
+              Now booking Q3 · 2026
+            </div>
+          </div>
+        </section>
+
+        <section class="specimen">
+          <div>
+            <div class="label">Shop size</div>
+            <strong>Two people</strong>
+          </div>
+          <div>
+            <div class="label">Projects / year</div>
+            <strong>Six, at most</strong>
+          </div>
+          <div>
+            <div class="label">First reply</div>
+            <strong>Within a day</strong>
+          </div>
+          <div>
+            <div class="label">Length of care</div>
+            <strong>Years, usually</strong>
+          </div>
+        </section>
+
+        <div class="fleuron" aria-hidden="true">
+          <svg><use href="#i-fleuron"/></svg>
+        </div>
+
+        <section class="services" id="services">
+          <div class="section-head">
+            <div class="section-label label">
+              The practice
+              <span>four disciplines</span>
+            </div>
+            <h2 class="section-title">
+              A short list of things<br />
+              we do <em>properly.</em>
+            </h2>
+          </div>
+
+          <ul class="service-list">
+            <li>
+              <div class="service-num">i.</div>
+              <div class="service-name">Custom web apps</div>
+              <div class="service-desc">
+                Booking systems, client portals, members areas, order
+                pipelines — the specific piece of software your
+                business is quietly built around.
+              </div>
+              <div class="service-meta">
+                <span>Scope</span>
+                <em>Fixed fee</em>
+              </div>
+            </li>
+            <li>
+              <div class="service-num">ii.</div>
+              <div class="service-name">Internal tools</div>
+              <div class="service-desc">
+                Admin dashboards, inventory, reporting, automations.
+                The boring software that saves a team ten hours a week
+                once it finally exists.
+              </div>
+              <div class="service-meta">
+                <span>Scope</span>
+                <em>By engagement</em>
+              </div>
+            </li>
+            <li>
+              <div class="service-num">iii.</div>
+              <div class="service-name">Modernization</div>
+              <div class="service-desc">
+                Aging Access databases, elderly WordPress installs,
+                critical spreadsheets with ambition. Rebuilt without
+                losing what made them useful.
+              </div>
+              <div class="service-meta">
+                <span>Scope</span>
+                <em>Staged</em>
+              </div>
+            </li>
+            <li>
+              <div class="service-num">iv.</div>
+              <div class="service-name">Stewardship</div>
+              <div class="service-desc">
+                Monthly care, quiet improvement, a real human at the
+                end of the email. Software, we think, is a living
+                thing that needs feeding.
+              </div>
+              <div class="service-meta">
+                <span>Scope</span>
+                <em>Ongoing</em>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="engagements" id="engagements">
+          <div class="engagements-head">
+            <h3>Selected <em>engagements</em>.</h3>
+            <span class="label">§ A sample of the work</span>
+          </div>
+          <ul class="engagements-list">
+            <li>
+              <div class="year">2026 · Present</div>
+              <h4>A small law office, three partners</h4>
+              <p>
+                Matter tracking, client intake, document assembly.
+                Replaced a decade-old Access database without losing
+                an hour of history.
+              </p>
+              <span class="disc">— Modernization</span>
+            </li>
+            <li>
+              <div class="year">2025 · Ongoing</div>
+              <h4>A therapy group, eight clinicians</h4>
+              <p>
+                Scheduling, secure client notes, and billing, tailored
+                to how the practice actually runs. Under monthly
+                stewardship since.
+              </p>
+              <span class="disc">— Custom app</span>
+            </li>
+            <li>
+              <div class="year">2025</div>
+              <h4>A family-run print shop</h4>
+              <p>
+                An internal order dashboard that collapsed a
+                whiteboard, a spreadsheet, and three sticky notes into
+                one screen the owner reaches for every morning.
+              </p>
+              <span class="disc">— Internal tool</span>
+            </li>
+          </ul>
+        </section>
+
+        <div class="fleuron" aria-hidden="true">
+          <svg><use href="#i-fleuron"/></svg>
+        </div>
+
+        <section class="pull">
+          <svg class="twice-motif" aria-hidden="true"><use href="#i-twice"/></svg>
+          <blockquote>
+            The second bake is where <em>the work</em> becomes yours.
+          </blockquote>
+          <cite>— On method</cite>
+        </section>
+
+        <section class="process" id="process">
+          <svg class="process-flame" aria-hidden="true"><use href="#i-flame"/></svg>
+          <div class="process-inner">
+            <div>
+              <div class="section-label label">§ The method</div>
+              <h2>Why <em>twice</em>, really.</h2>
+            </div>
+            <div class="process-body">
+              <p class="lede">
+                The first bake is the code. Anyone with a keyboard can
+                write code — it's the second bake that matters:
+                sitting with the software beside you, tasting it,
+                adjusting the seasoning, noticing what you actually
+                reach for at 9am on a Tuesday.
+              </p>
+              <p>
+                Every engagement we take includes a second pass by
+                default. A month or two after the first build, we come
+                back with fresh eyes, a list of what the software
+                asked for while it was being used, and time set aside
+                to answer it.
+              </p>
+              <p>
+                We keep our client list small on purpose. It lets us
+                know your business well enough to give real advice —
+                not just ship tickets — and most of our work comes
+                from people we've worked with for years.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cta" id="contact">
+          <div class="section-label label">Correspondence</div>
+          <h2>Let's make<br />something <em>lasting.</em></h2>
+          <p>
+            A short note about the business, the problem that keeps
+            resurfacing, and what you've already tried. A proper reply
+            within a day, with honest thoughts.
+          </p>
+          <a class="mail" href="mailto:hello@twicebaked.software">
+            hello@twicebaked.software
+          </a>
+        </section>
+      </main>
+
+      <footer>
+        <div class="foot">
+          <div>© MMXXVI · Twice Baked Software</div>
+          <div><em>Set in Fraunces &amp; DM Sans</em></div>
+          <div>A boutique of two</div>
+        </div>
+      </footer>
+    </div>
+
+    <nav class="theme-switcher" aria-label="Page switcher">
+      <span class="theme-switcher-label">Pages</span>
+      <a href="hearth.html" class="active">01 Landing</a>
+      <a href="tokens.html">02 Tokens</a>
+    </nav>
+
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const stored = localStorage.getItem("tbs-theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const initial = stored || (prefersDark ? "dark" : "light");
+        setMode(initial);
+
+        document.querySelectorAll(".mode-toggle button").forEach((btn) => {
+          btn.addEventListener("click", () => setMode(btn.dataset.mode));
+        });
+
+        function setMode(mode) {
+          root.setAttribute("data-theme", mode);
+          localStorage.setItem("tbs-theme", mode);
+          document
+            .querySelectorAll(".mode-toggle button")
+            .forEach((b) =>
+              b.setAttribute(
+                "aria-pressed",
+                b.dataset.mode === mode ? "true" : "false"
+              )
+            );
+        }
+      })();
+    </script>
+  </body>
+</html>

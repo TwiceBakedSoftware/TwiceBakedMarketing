@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Twice Baked Software — Theme Proposals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0d0d0f;
+        --bg-soft: #17171a;
+        --fg: #ededea;
+        --fg-dim: #8a8a86;
+        --rule: rgba(237, 237, 234, 0.12);
+        --accent: #e8b84f;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(
+            ellipse 60% 40% at 15% 0%,
+            rgba(232, 184, 79, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 85% 100%,
+            rgba(184, 68, 46, 0.06),
+            transparent 60%
+          );
+        z-index: 0;
+      }
+
+      .wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 44px;
+        position: relative;
+        z-index: 2;
+      }
+
+      header {
+        padding: 48px 0 80px;
+        border-bottom: 1px solid var(--rule);
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--fg-dim);
+        margin-bottom: 80px;
+      }
+      .top .dot {
+        color: var(--accent);
+      }
+
+      h1 {
+        font-family: "Fraunces", serif;
+        font-variation-settings: "opsz" 144;
+        font-weight: 300;
+        font-size: clamp(56px, 9vw, 140px);
+        line-height: 0.9;
+        letter-spacing: -0.035em;
+        max-width: 14ch;
+      }
+      h1 em {
+        font-style: italic;
+        color: var(--accent);
+        font-weight: 400;
+      }
+      .lede {
+        margin-top: 44px;
+        max-width: 58ch;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        line-height: 1.75;
+        color: var(--fg-dim);
+      }
+      .lede b {
+        color: var(--fg);
+        font-weight: 500;
+      }
+
+      .meta {
+        margin-top: 64px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .meta div span {
+        display: block;
+        color: var(--fg-dim);
+        margin-bottom: 6px;
+      }
+      .meta div strong {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 18px;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--accent);
+      }
+
+      /* Theme list ---------- */
+      .themes {
+        padding: 80px 0;
+      }
+      .section-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+        margin-bottom: 50px;
+      }
+      .theme-list {
+        list-style: none;
+        border-top: 1px solid var(--rule);
+      }
+      .theme-list a {
+        display: grid;
+        grid-template-columns: 80px 2fr 3fr 2fr 40px;
+        gap: 40px;
+        padding: 48px 0;
+        border-bottom: 1px solid var(--rule);
+        text-decoration: none;
+        color: var(--fg);
+        align-items: center;
+        transition: padding 0.4s ease, background 0.4s ease;
+        position: relative;
+      }
+      .theme-list a::before {
+        content: "";
+        position: absolute;
+        left: -44px;
+        right: -44px;
+        top: 0;
+        bottom: 0;
+        background: var(--bg-soft);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+      }
+      .theme-list a:hover {
+        padding-left: 24px;
+      }
+      .theme-list a:hover::before {
+        opacity: 1;
+      }
+      .theme-list a:hover .arrow {
+        transform: translateX(8px);
+        color: var(--accent);
+      }
+
+      .t-num {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 42px;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .t-name {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: 44px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+      .t-name small {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--fg-dim);
+        margin-top: 14px;
+      }
+      .t-desc {
+        font-size: 13px;
+        line-height: 1.65;
+        color: var(--fg-dim);
+      }
+      .t-fonts {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--fg-dim);
+      }
+      .t-fonts em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 15px;
+        color: var(--fg);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .arrow {
+        font-size: 22px;
+        color: var(--fg-dim);
+        text-align: right;
+        transition: all 0.4s ease;
+      }
+
+      /* Color swatch row in each row */
+      .swatches {
+        display: flex;
+        gap: 6px;
+        margin-top: 14px;
+      }
+      .swatches span {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid rgba(237, 237, 234, 0.2);
+      }
+
+      /* Footer ---------- */
+      footer {
+        padding: 80px 0 60px;
+        border-top: 1px solid var(--rule);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--fg-dim);
+      }
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      footer em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-size: 14px;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--accent);
+      }
+
+      @media (max-width: 900px) {
+        .meta {
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+        }
+        .theme-list a {
+          grid-template-columns: 50px 1fr;
+          gap: 20px;
+          padding: 32px 0;
+        }
+        .t-desc,
+        .t-fonts,
+        .arrow {
+          grid-column: 2;
+        }
+        .arrow {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="top">
+          <span><span class="dot">●</span> .ai / theme-proposals</span>
+          <span>Direction chosen · Hearth</span>
+          <span>Twice Baked Software</span>
+          <span>Internal — not shipped</span>
+        </div>
+        <h1>
+          Hearth, in<br />
+          <em>light</em> and<br />
+          <em>dark.</em>
+        </h1>
+        <p class="lede">
+          Hearth has been chosen as the landing-page direction for
+          <b>Twice Baked Software</b>. Atelier is folded in as its
+          dark mode — same layout, type scale, and motifs; only the
+          color tokens swap. A <b>design-tokens specimen</b>
+          documents the whole system for when this moves into real
+          implementation.
+        </p>
+        <div class="meta">
+          <div>
+            <span>Direction</span>
+            <strong>Hearth · light / dark</strong>
+          </div>
+          <div>
+            <span>System</span>
+            <strong>Fraunces · DM Sans</strong>
+          </div>
+          <div>
+            <span>Motifs</span>
+            <strong>6 hand-drawn SVGs</strong>
+          </div>
+          <div>
+            <span>Pages</span>
+            <strong>Landing · Tokens</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="themes">
+        <div class="section-label">§ The pages</div>
+        <ul class="theme-list">
+          <li>
+            <a href="hearth.html">
+              <div class="t-num">01</div>
+              <div>
+                <div class="t-name">Landing</div>
+                <div class="swatches">
+                  <span style="background: #f8efdc"></span>
+                  <span style="background: #efe3c6"></span>
+                  <span style="background: #b5401f"></span>
+                  <span style="background: #221610"></span>
+                  <span style="background: #0f1210; border-color: #333"></span>
+                  <span style="background: #c9a25b"></span>
+                </div>
+                <small>Hearth · the main page</small>
+              </div>
+              <div class="t-desc">
+                The landing page. Warm artisan direction with a
+                light/dark mode toggle — cream + terracotta by day,
+                night + gold after sunset. Same layout, type scale,
+                and motifs in both modes; only the color tokens
+                swap. Fraunces carries the display, DM Sans handles
+                labels, and a hand-drawn SVG library (wheat,
+                fleuron, flame, seal, twice-motif, logomark) adds
+                the human touch without going cartoon.
+              </div>
+              <div class="t-fonts">
+                <em>Fraunces</em>
+                DM Sans · light + dark
+              </div>
+              <div class="arrow">→</div>
+            </a>
+          </li>
+
+          <li>
+            <a href="tokens.html">
+              <div class="t-num">02</div>
+              <div>
+                <div class="t-name">Tokens</div>
+                <div class="swatches">
+                  <span style="background: #f8efdc"></span>
+                  <span style="background: #b5401f"></span>
+                  <span style="background: #c88c3c"></span>
+                  <span style="background: #221610"></span>
+                </div>
+                <small>Specimen book</small>
+              </div>
+              <div class="t-desc">
+                A reference document for the Hearth design system.
+                Colors, type scale with live Fraunces specimens,
+                spacing rhythm, radii, motion durations, the motif
+                library, component demos, and usage principles.
+                Every sample respects the mode toggle, so you can
+                preview the whole system in both light and dark.
+              </div>
+              <div class="t-fonts">
+                <em>Fraunces · DM Sans</em>
+                JetBrains Mono · tokens
+              </div>
+              <div class="arrow">→</div>
+            </a>
+          </li>
+
+        </ul>
+      </main>
+
+      <footer>
+        <div class="foot">
+          <div>.ai / theme-proposals / index.html</div>
+          <div><em>One direction, one studio</em></div>
+          <div>Open any file to begin</div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Twice Baked Software — Design Tokens</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=DM+Sans:opsz,wght@9..40,400..600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ff-display: "Fraunces", Georgia, serif;
+        --ff-body: "Fraunces", Georgia, serif;
+        --ff-label: "DM Sans", system-ui, sans-serif;
+        --ff-mono: "JetBrains Mono", ui-monospace, monospace;
+
+        --step--2: 11px;
+        --step--1: 13px;
+        --step-0: 16px;
+        --step-1: 20px;
+        --step-2: 26px;
+        --step-3: 34px;
+        --step-4: 48px;
+        --step-5: 68px;
+        --step-6: 92px;
+
+        --sp-1: 8px;
+        --sp-2: 16px;
+        --sp-3: 24px;
+        --sp-4: 36px;
+        --sp-5: 56px;
+        --sp-6: 80px;
+        --sp-7: 120px;
+
+        --r-1: 2px;
+        --r-2: 6px;
+        --r-3: 14px;
+        --r-full: 999px;
+
+        --t-fast: 0.2s ease;
+        --t-base: 0.35s ease;
+        --t-slow: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      [data-theme="light"] {
+        --bg: #f8efdc;
+        --bg-hi: #fdf7e8;
+        --bg-lo: #efe3c6;
+        --ink: #221610;
+        --ink-soft: #5a4434;
+        --ink-mute: #8a7461;
+        --accent: #b5401f;
+        --accent-deep: #7a260c;
+        --accent-soft: #c88c3c;
+        --rule: rgba(34, 22, 16, 0.16);
+        --rule-soft: rgba(34, 22, 16, 0.08);
+      }
+
+      [data-theme="dark"] {
+        --bg: #0f1210;
+        --bg-hi: #161a17;
+        --bg-lo: #080a09;
+        --ink: #f2ebdb;
+        --ink-soft: #cfc8b5;
+        --ink-mute: #78736a;
+        --accent: #c9a25b;
+        --accent-deep: #e0b76a;
+        --accent-soft: #3e7a55;
+        --rule: rgba(242, 235, 219, 0.14);
+        --rule-soft: rgba(242, 235, 219, 0.06);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px;
+      }
+
+      html,
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--ff-body);
+        font-variation-settings: "opsz" 14, "SOFT" 50;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        transition:
+          background-color var(--t-base),
+          color var(--t-base);
+      }
+
+      ::selection {
+        background: var(--accent);
+        color: var(--bg-hi);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      [data-theme="light"] body::before {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.09 0 0 0 0 0.06 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        mix-blend-mode: multiply;
+      }
+      [data-theme="dark"] body::before {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 0.95 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        mix-blend-mode: screen;
+      }
+
+      main,
+      header,
+      footer {
+        position: relative;
+        z-index: 1;
+      }
+
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 var(--sp-5);
+      }
+
+      .label {
+        font-family: var(--ff-label);
+        font-size: var(--step--2);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-weight: 500;
+      }
+
+      .mono {
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        color: var(--ink-mute);
+      }
+
+      /* ═══ HEADER ═══ */
+      header {
+        padding: var(--sp-4) 0 var(--sp-3);
+        border-bottom: 1px solid var(--rule);
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        z-index: 10;
+        transition: background-color var(--t-base);
+      }
+      .header-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 var(--sp-5);
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: var(--sp-3);
+      }
+      .back {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-size: 17px;
+        color: var(--ink);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .back:hover {
+        color: var(--accent);
+      }
+      .page-title {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+        justify-self: center;
+      }
+      .page-title em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--accent);
+      }
+      .mode-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        background: var(--bg-hi);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-full);
+        padding: 3px;
+        justify-self: end;
+      }
+      .mode-toggle button {
+        background: none;
+        border: none;
+        padding: 7px 13px;
+        border-radius: var(--r-full);
+        color: var(--ink-mute);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: var(--ff-label);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 600;
+        transition: all var(--t-fast);
+      }
+      .mode-toggle button svg {
+        width: 12px;
+        height: 12px;
+      }
+      .mode-toggle button:hover {
+        color: var(--ink);
+      }
+      .mode-toggle button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+
+      /* ═══ HERO ═══ */
+      .hero {
+        padding: var(--sp-7) 0 var(--sp-6);
+        display: grid;
+        grid-template-columns: 7fr 5fr;
+        gap: var(--sp-6);
+        align-items: end;
+        position: relative;
+      }
+      .hero-twice {
+        position: absolute;
+        top: 120px;
+        right: 8%;
+        width: 120px;
+        height: 120px;
+        color: var(--accent);
+        opacity: 0.3;
+        pointer-events: none;
+        animation: slow-breath 8s ease-in-out infinite;
+      }
+      @keyframes slow-breath {
+        0%, 100% { opacity: 0.25; transform: scale(1); }
+        50% { opacity: 0.45; transform: scale(1.04); }
+      }
+      .hero .kicker {
+        color: var(--accent);
+        margin-bottom: var(--sp-3);
+      }
+      .hero h1 {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        font-weight: 300;
+        font-size: clamp(56px, 9vw, 132px);
+        line-height: 0.9;
+        letter-spacing: -0.034em;
+        max-width: 12ch;
+      }
+      .hero h1 em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+      .hero-right {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: 18px;
+        line-height: 1.7;
+        color: var(--ink-soft);
+        max-width: 44ch;
+        padding-bottom: 12px;
+      }
+      .hero-right p + p {
+        margin-top: 18px;
+      }
+      .hero-right .lede::first-letter {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--accent);
+        font-size: 72px;
+        line-height: 0.75;
+        float: left;
+        margin: 8px 10px -4px 0;
+      }
+
+      /* ═══ SECTION ═══ */
+      section.specimen-section {
+        padding: var(--sp-6) 0;
+        border-top: 1px solid var(--rule);
+      }
+      .section-head {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: var(--sp-5);
+        margin-bottom: var(--sp-5);
+        align-items: baseline;
+      }
+      .section-head .num {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 300;
+        font-size: 44px;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .section-head .num small {
+        display: block;
+        font-family: var(--ff-label);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--ink-mute);
+        margin-top: 8px;
+        font-style: normal;
+      }
+      .section-head h2 {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        font-weight: 300;
+        font-size: clamp(38px, 5vw, 72px);
+        line-height: 0.96;
+        letter-spacing: -0.025em;
+      }
+      .section-head h2 em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-weight: 400;
+        color: var(--accent);
+      }
+      .section-head p {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: 17px;
+        color: var(--ink-soft);
+        margin-top: 18px;
+        max-width: 54ch;
+        line-height: 1.65;
+      }
+
+      /* ═══ COLORS ═══ */
+      .colors {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--sp-3);
+      }
+      .swatch {
+        border: 1px solid var(--rule);
+        border-radius: var(--r-2);
+        overflow: hidden;
+        background: var(--bg-hi);
+      }
+      .swatch-chip {
+        height: 140px;
+        position: relative;
+      }
+      .swatch-chip::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        mix-blend-mode: multiply;
+      }
+      .swatch-body {
+        padding: var(--sp-3);
+        border-top: 1px solid var(--rule);
+      }
+      .swatch-body .name {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+      }
+      .swatch-body .name em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .swatch-body .var {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--ink-mute);
+        margin-top: 8px;
+        word-break: break-all;
+      }
+      .swatch-body .use {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+
+      /* ═══ TYPE SPECIMEN ═══ */
+      .type-specimen {
+        display: grid;
+        gap: 0;
+      }
+      .type-row {
+        display: grid;
+        grid-template-columns: 80px 1fr 160px;
+        gap: var(--sp-4);
+        padding: var(--sp-4) 0;
+        border-top: 1px solid var(--rule);
+        align-items: baseline;
+      }
+      .type-row:last-child {
+        border-bottom: 1px solid var(--rule);
+      }
+      .type-step {
+        font-family: var(--ff-label);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+      }
+      .type-sample {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+      .type-sample em {
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        color: var(--accent);
+      }
+      .type-meta {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--ink-mute);
+        text-align: right;
+      }
+      .type-meta strong {
+        display: block;
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+
+      .font-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--sp-3);
+        margin-bottom: var(--sp-5);
+      }
+      .font-card {
+        padding: var(--sp-4);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-2);
+        background: var(--bg-hi);
+      }
+      .font-card .role {
+        font-family: var(--ff-label);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+      }
+      .font-card .name {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60;
+        font-weight: 400;
+        font-size: 48px;
+        line-height: 1;
+        margin: 16px 0 10px;
+        letter-spacing: -0.02em;
+      }
+      .font-card.body .name {
+        font-family: var(--ff-label);
+        font-weight: 500;
+      }
+      .font-card .aa {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 110px;
+        color: var(--accent);
+        line-height: 0.9;
+        margin: 20px 0 10px;
+      }
+      .font-card.body .aa {
+        font-family: var(--ff-label);
+        font-style: normal;
+        color: var(--ink);
+        font-weight: 400;
+      }
+      .font-card .meta {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--ink-mute);
+        padding-top: var(--sp-3);
+        border-top: 1px solid var(--rule);
+      }
+      .font-card .meta div {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+      }
+      .font-card .meta div span:last-child {
+        color: var(--ink);
+      }
+
+      /* ═══ SCALE BARS ═══ */
+      .scale-list {
+        display: grid;
+        gap: 2px;
+      }
+      .scale-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 120px;
+        gap: var(--sp-3);
+        padding: 14px 0;
+        border-top: 1px solid var(--rule);
+        align-items: center;
+      }
+      .scale-row:last-child {
+        border-bottom: 1px solid var(--rule);
+      }
+      .scale-token {
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        color: var(--ink);
+      }
+      .scale-bar {
+        height: 10px;
+        background: var(--accent);
+        opacity: 0.85;
+      }
+      .scale-value {
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        color: var(--ink-mute);
+        text-align: right;
+      }
+
+      /* ═══ RADII ═══ */
+      .radii {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--sp-3);
+      }
+      .radius-card {
+        padding: var(--sp-4);
+        border: 1px solid var(--rule);
+        background: var(--bg-hi);
+        border-radius: var(--r-2);
+        text-align: center;
+      }
+      .radius-demo {
+        height: 80px;
+        background: var(--accent);
+        margin-bottom: var(--sp-3);
+      }
+      .radius-card .token {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--ink);
+      }
+      .radius-card .val {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--ink-mute);
+        margin-top: 4px;
+      }
+
+      /* ═══ MOTIFS ═══ */
+      .motifs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--sp-3);
+      }
+      .motif-card {
+        padding: var(--sp-4);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-2);
+        background: var(--bg-hi);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .motif-frame {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        position: relative;
+      }
+      .motif-frame svg {
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .motif-card .name {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: 22px;
+        margin-top: var(--sp-3);
+        padding-top: var(--sp-3);
+        border-top: 1px solid var(--rule);
+      }
+      .motif-card .name em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .motif-card .desc {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: 14px;
+        color: var(--ink-soft);
+        margin-top: 8px;
+        line-height: 1.55;
+      }
+      .motif-card .id {
+        font-family: var(--ff-mono);
+        font-size: 10px;
+        color: var(--ink-mute);
+        margin-top: 10px;
+      }
+
+      /* ═══ MOTION ═══ */
+      .motion-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--sp-3);
+      }
+      .motion-card {
+        padding: var(--sp-4);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-2);
+        background: var(--bg-hi);
+      }
+      .motion-card .token {
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        color: var(--accent);
+      }
+      .motion-card .name {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: 26px;
+        margin: 10px 0 4px;
+      }
+      .motion-card .name em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .motion-card .val {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--ink-mute);
+      }
+      .motion-demo {
+        margin-top: var(--sp-3);
+        height: 40px;
+        position: relative;
+        background: var(--bg-lo);
+        border-radius: var(--r-full);
+        overflow: hidden;
+      }
+      .motion-demo::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 8px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--accent);
+        transform: translateY(-50%);
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-name: slide;
+      }
+      .motion-card.fast .motion-demo::after {
+        animation-timing-function: ease;
+        animation-duration: 1s;
+      }
+      .motion-card.base .motion-demo::after {
+        animation-timing-function: ease;
+        animation-duration: 1.6s;
+      }
+      .motion-card.slow .motion-demo::after {
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        animation-duration: 2.4s;
+      }
+      @keyframes slide {
+        from {
+          left: 8px;
+        }
+        to {
+          left: calc(100% - 32px);
+        }
+      }
+
+      /* ═══ COMPONENTS ═══ */
+      .components {
+        display: grid;
+        gap: var(--sp-4);
+      }
+      .comp-card {
+        padding: var(--sp-5);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-2);
+        background: var(--bg-hi);
+      }
+      .comp-card > .label {
+        color: var(--accent);
+        margin-bottom: var(--sp-3);
+      }
+      .comp-card .demo {
+        padding: var(--sp-4) 0;
+      }
+      .demo-btn-row {
+        display: flex;
+        gap: var(--sp-3);
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: var(--bg);
+        padding: 20px 32px;
+        border-radius: var(--r-1);
+        text-decoration: none;
+        font-family: var(--ff-label);
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        transition: all var(--t-base);
+        border: none;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        background: var(--accent-deep);
+        color: var(--bg-hi);
+      }
+      .btn-ghost {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-size: 20px;
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--ink);
+        padding-bottom: 3px;
+      }
+
+      /* tag */
+      .demo-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-lo);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-full);
+        padding: 8px 14px 8px 10px;
+        font-family: var(--ff-label);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--ink);
+      }
+      .demo-tag::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* ═══ USAGE ═══ */
+      .usage {
+        padding: var(--sp-6);
+        background: var(--bg-hi);
+        border: 1px solid var(--rule);
+        border-radius: var(--r-2);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--sp-5);
+      }
+      .usage .principle {
+        padding: 0;
+      }
+      .usage .principle .num {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        font-size: 32px;
+        color: var(--accent);
+        line-height: 1;
+        margin-bottom: 14px;
+      }
+      .usage .principle h4 {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 60,
+          "WONK" 1;
+        font-weight: 400;
+        font-size: 26px;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+      .usage .principle h4 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .usage .principle p {
+        font-family: var(--ff-display);
+        font-variation-settings:
+          "opsz" 24,
+          "SOFT" 50;
+        font-size: 15px;
+        color: var(--ink-soft);
+        line-height: 1.65;
+        max-width: 44ch;
+      }
+
+      /* ═══ FOOTER ═══ */
+      footer {
+        padding: var(--sp-6) 0 var(--sp-7);
+        margin-top: var(--sp-6);
+        border-top: 1px solid var(--rule);
+        font-family: var(--ff-label);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--ink-mute);
+      }
+      footer .foot {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      footer em {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100,
+          "WONK" 1;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 16px;
+        color: var(--accent);
+      }
+
+      /* ═══ BOTTOM NAV ═══ */
+      .theme-switcher {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+        background: #1a1410;
+        color: #fdf7e8;
+        padding: 7px;
+        border-radius: var(--r-full);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.55);
+        display: flex;
+        gap: 2px;
+        font-family: var(--ff-label);
+        font-size: 11px;
+      }
+      [data-theme="dark"] .theme-switcher {
+        background: #080a09;
+        border-color: rgba(242, 235, 219, 0.1);
+      }
+      .theme-switcher a {
+        color: rgba(253, 247, 232, 0.55);
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: var(--r-full);
+        white-space: nowrap;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition: color var(--t-fast), background-color var(--t-fast);
+      }
+      .theme-switcher a:hover {
+        color: #fdf7e8;
+      }
+      .theme-switcher a.active {
+        background: var(--accent);
+        color: #fdf7e8;
+      }
+      .theme-switcher-label {
+        padding: 10px 4px 10px 14px;
+        color: rgba(253, 247, 232, 0.3);
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        align-self: center;
+      }
+
+      @media (max-width: 720px) {
+        .mode-toggle button {
+          font-size: 0;
+          padding: 9px 11px;
+          gap: 0;
+        }
+        .mode-toggle button svg {
+          width: 14px;
+          height: 14px;
+        }
+        .page-title {
+          display: none;
+        }
+        .header-inner {
+          grid-template-columns: 1fr auto;
+        }
+      }
+
+      @media (max-width: 960px) {
+        .wrap,
+        .header-inner {
+          padding: 0 28px;
+        }
+        .colors,
+        .radii,
+        .motifs,
+        .motion-list {
+          grid-template-columns: 1fr 1fr;
+        }
+        .font-pair,
+        .hero,
+        .section-head,
+        .usage {
+          grid-template-columns: 1fr;
+          gap: var(--sp-4);
+        }
+        .type-row {
+          grid-template-columns: 60px 1fr;
+        }
+        .type-meta {
+          grid-column: 1 / -1;
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Shared symbol library -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-logo" viewBox="0 0 26 26">
+          <circle cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="13" cy="13" r="4" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-wheat" viewBox="0 0 70 220" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 35 220 Q 34 150 36 90 Q 37 50 36 18"/>
+          <path d="M 36 18 Q 40 10 36 2 Q 32 10 36 18 Z" fill="currentColor" fill-opacity="0.15"/>
+          <path d="M 36 35 Q 50 28 46 14"/>
+          <path d="M 36 35 Q 22 28 26 14"/>
+          <path d="M 35 52 Q 52 45 49 28"/>
+          <path d="M 35 52 Q 18 45 21 28"/>
+          <path d="M 35 70 Q 53 63 50 44"/>
+          <path d="M 35 70 Q 17 63 20 44"/>
+          <path d="M 35 90 Q 54 83 51 62"/>
+          <path d="M 35 90 Q 16 83 19 62"/>
+          <path d="M 36 112 Q 55 105 52 82"/>
+          <path d="M 36 112 Q 17 105 20 82"/>
+          <path d="M 36 134 Q 54 127 51 103"/>
+          <path d="M 36 134 Q 18 127 21 103"/>
+        </symbol>
+        <symbol id="i-twice" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="54" cy="54" r="44"/>
+          <circle cx="66" cy="66" r="44"/>
+          <circle cx="60" cy="60" r="2" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-flame" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 24 44 Q 8 36 12 22 Q 16 30 18 26 Q 18 14 24 4 Q 26 16 32 20 Q 38 14 38 26 Q 42 34 36 40 Q 30 44 24 44 Z"/>
+          <path d="M 24 40 Q 17 34 20 26 Q 24 32 26 28 Q 28 22 30 28 Q 33 34 28 38 Q 26 40 24 40 Z" fill="currentColor" fill-opacity="0.15"/>
+        </symbol>
+        <symbol id="i-fleuron" viewBox="0 0 72 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <circle cx="36" cy="9" r="4" fill="currentColor"/>
+          <circle cx="20" cy="9" r="1.5" fill="currentColor"/>
+          <circle cx="52" cy="9" r="1.5" fill="currentColor"/>
+          <path d="M 4 9 Q 14 2 18 9"/>
+          <path d="M 4 9 Q 14 16 18 9"/>
+          <path d="M 68 9 Q 58 2 54 9"/>
+          <path d="M 68 9 Q 58 16 54 9"/>
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 14.5A8 8 0 019.5 4a7 7 0 1010.5 10.5z"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <header>
+      <div class="header-inner">
+        <a class="back" href="hearth.html">← Back to the landing</a>
+        <div class="page-title">Twice <em>Baked</em> · Design Tokens</div>
+        <div class="mode-toggle" role="group" aria-label="Theme mode">
+          <button data-mode="light" aria-pressed="true">
+            <svg aria-hidden="true"><use href="#i-sun"/></svg>Light
+          </button>
+          <button data-mode="dark" aria-pressed="false">
+            <svg aria-hidden="true"><use href="#i-moon"/></svg>Dark
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <main>
+        <section class="hero">
+          <svg class="hero-twice" aria-hidden="true"><use href="#i-twice"/></svg>
+          <div>
+            <div class="label kicker">A specimen book · MMXXVI</div>
+            <h1>
+              The <em>Hearth</em><br />
+              token set.
+            </h1>
+          </div>
+          <div class="hero-right">
+            <p class="lede">
+              Every landing page in the studio is built from the same
+              small set of tokens — colors, type, spacing, radii,
+              motion, and a hand-drawn motif library. Swap the mode
+              with the toggle above; every sample on this page
+              recolors from the same variables.
+            </p>
+            <p>
+              This page is the reference. The landing is the product.
+            </p>
+          </div>
+        </section>
+
+        <!-- ═══ COLORS ═══ -->
+        <section class="specimen-section" id="colors">
+          <div class="section-head">
+            <div class="num">i.<small>§ 01 · Color</small></div>
+            <div>
+              <h2>A warm, <em>narrow</em> palette.</h2>
+              <p>
+                Eight semantic tokens — two surfaces, three inks,
+                three accents, plus rules. The same names exist in
+                light and dark mode; only the values swap. No hex
+                codes appear in component CSS.
+              </p>
+            </div>
+          </div>
+
+          <div class="colors">
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--bg)"></div>
+              <div class="swatch-body">
+                <div class="name">Surface · <em>bg</em></div>
+                <div class="var">--bg</div>
+                <div class="use">The paper itself. Used for page background and button fills in dark mode.</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--bg-hi)"></div>
+              <div class="swatch-body">
+                <div class="name">Surface · <em>hi</em></div>
+                <div class="var">--bg-hi</div>
+                <div class="use">Raised surface. Cards, toggle pills, code blocks, sticky header.</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--bg-lo)"></div>
+              <div class="swatch-body">
+                <div class="name">Surface · <em>lo</em></div>
+                <div class="var">--bg-lo</div>
+                <div class="use">Recessed surface. Section backgrounds, inset panels, subtle depth.</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--ink)"></div>
+              <div class="swatch-body">
+                <div class="name">Ink · <em>primary</em></div>
+                <div class="var">--ink</div>
+                <div class="use">Body copy, headlines, primary buttons. The "type color."</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--ink-soft)"></div>
+              <div class="swatch-body">
+                <div class="name">Ink · <em>soft</em></div>
+                <div class="var">--ink-soft</div>
+                <div class="use">Secondary copy, descriptions, lede paragraphs.</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--ink-mute)"></div>
+              <div class="swatch-body">
+                <div class="name">Ink · <em>mute</em></div>
+                <div class="var">--ink-mute</div>
+                <div class="use">Labels, small-caps, footer, marginalia, supporting text.</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--accent)"></div>
+              <div class="swatch-body">
+                <div class="name">Accent · <em>primary</em></div>
+                <div class="var">--accent</div>
+                <div class="use">Terracotta in light, gold in dark. Italics, rules, the one thing that always catches the eye.</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: var(--accent-soft)"></div>
+              <div class="swatch-body">
+                <div class="name">Accent · <em>soft</em></div>
+                <div class="var">--accent-soft</div>
+                <div class="use">Wheat gold in light, forest green in dark. Ornamental — wheat, supporting marks.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ TYPE ═══ -->
+        <section class="specimen-section" id="typography">
+          <div class="section-head">
+            <div class="num">ii.<small>§ 02 · Type</small></div>
+            <div>
+              <h2>Fraunces, <em>ambitiously.</em></h2>
+              <p>
+                Fraunces carries 95% of the type, across four optical
+                sizes and three SOFT values. DM Sans handles labels
+                and micro-typography only. The italic WONK glyphs
+                (<code>WONK 1</code>) are reserved for accent words
+                — nothing else earns them.
+              </p>
+            </div>
+          </div>
+
+          <div class="font-pair">
+            <div class="font-card">
+              <div class="role">Display &amp; body</div>
+              <div class="name">Fraunces</div>
+              <div class="aa">Aa</div>
+              <div class="meta">
+                <div><span>Classification</span><span>Variable serif</span></div>
+                <div><span>Axes</span><span>opsz, wght, SOFT, WONK, ital</span></div>
+                <div><span>opsz range</span><span>9–144</span></div>
+                <div><span>SOFT values</span><span>30, 50, 60, 100</span></div>
+              </div>
+            </div>
+            <div class="font-card body">
+              <div class="role">Labels &amp; micro</div>
+              <div class="name">DM Sans</div>
+              <div class="aa">Aa</div>
+              <div class="meta">
+                <div><span>Classification</span><span>Geometric sans</span></div>
+                <div><span>Usage</span><span>All-caps labels, marginalia</span></div>
+                <div><span>Weights</span><span>500, 600</span></div>
+                <div><span>Tracking</span><span>0.18–0.24 em</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="type-specimen">
+            <div class="type-row">
+              <div class="type-step">step 7</div>
+              <div class="type-sample" style="font-size: 92px">Baked <em>twice</em></div>
+              <div class="type-meta"><strong>--step-7</strong>72 – 188px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 6</div>
+              <div class="type-sample" style="font-size: 72px">Baked <em>twice</em></div>
+              <div class="type-meta"><strong>--step-6</strong>64 – 124px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 5</div>
+              <div class="type-sample" style="font-size: 54px">Baked <em>twice</em></div>
+              <div class="type-meta"><strong>--step-5</strong>48 – 78px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 4</div>
+              <div class="type-sample" style="font-size: 40px">Baked <em>twice</em></div>
+              <div class="type-meta"><strong>--step-4</strong>36 – 52px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 3</div>
+              <div class="type-sample" style="font-size: 30px">Baked <em>twice</em></div>
+              <div class="type-meta"><strong>--step-3</strong>28 – 36px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 2</div>
+              <div class="type-sample" style="font-size: 24px">Baked <em>twice</em></div>
+              <div class="type-meta"><strong>--step-2</strong>22 – 26px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 1</div>
+              <div class="type-sample" style="font-size: 20px; font-variation-settings: 'opsz' 24, 'SOFT' 50">Baked twice — a lede paragraph.</div>
+              <div class="type-meta"><strong>--step-1</strong>18 – 21px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">step 0</div>
+              <div class="type-sample" style="font-size: 16px; font-variation-settings: 'opsz' 14, 'SOFT' 50">Body copy. Set at 16px with Fraunces at opsz 14 and SOFT 50 — warmer than the display sizes.</div>
+              <div class="type-meta"><strong>--step-0</strong>15 – 17px</div>
+            </div>
+            <div class="type-row">
+              <div class="type-step">label</div>
+              <div class="type-sample" style="font-family: var(--ff-label); font-size: 11px; text-transform: uppercase; letter-spacing: 0.22em; font-weight: 500">CHAPTER ONE · THE STUDIO</div>
+              <div class="type-meta"><strong>DM Sans</strong>11 – 13px · 0.22em</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ SPACING ═══ -->
+        <section class="specimen-section" id="spacing">
+          <div class="section-head">
+            <div class="num">iii.<small>§ 03 · Spacing</small></div>
+            <div>
+              <h2>An 8px <em>rhythm.</em></h2>
+              <p>
+                Eight spacing steps, each derived from the 8px base
+                unit. Sections breathe at <code>--sp-7</code> or
+                <code>--sp-8</code>; elements sit at 2–4. Consistency
+                is what makes the page feel unhurried.
+              </p>
+            </div>
+          </div>
+          <div class="scale-list">
+            <div class="scale-row">
+              <div class="scale-token">--sp-1</div>
+              <div class="scale-bar" style="width: 8px"></div>
+              <div class="scale-value">8px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-2</div>
+              <div class="scale-bar" style="width: 16px"></div>
+              <div class="scale-value">16px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-3</div>
+              <div class="scale-bar" style="width: 24px"></div>
+              <div class="scale-value">24px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-4</div>
+              <div class="scale-bar" style="width: 36px"></div>
+              <div class="scale-value">36px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-5</div>
+              <div class="scale-bar" style="width: 56px"></div>
+              <div class="scale-value">56px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-6</div>
+              <div class="scale-bar" style="width: 80px"></div>
+              <div class="scale-value">80px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-7</div>
+              <div class="scale-bar" style="width: 120px"></div>
+              <div class="scale-value">120px</div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-token">--sp-8</div>
+              <div class="scale-bar" style="width: 180px"></div>
+              <div class="scale-value">180px</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ RADII ═══ -->
+        <section class="specimen-section" id="radii">
+          <div class="section-head">
+            <div class="num">iv.<small>§ 04 · Radii</small></div>
+            <div>
+              <h2>Four corners, <em>four voices.</em></h2>
+              <p>
+                Near-square for buttons (letterpress feel), soft for
+                cards, fully round for pills and toggles. No "medium"
+                — every choice is deliberate.
+              </p>
+            </div>
+          </div>
+          <div class="radii">
+            <div class="radius-card">
+              <div class="radius-demo" style="border-radius: 2px"></div>
+              <div class="token">--r-1</div>
+              <div class="val">2px · square</div>
+            </div>
+            <div class="radius-card">
+              <div class="radius-demo" style="border-radius: 6px"></div>
+              <div class="token">--r-2</div>
+              <div class="val">6px · soft</div>
+            </div>
+            <div class="radius-card">
+              <div class="radius-demo" style="border-radius: 14px"></div>
+              <div class="token">--r-3</div>
+              <div class="val">14px · card</div>
+            </div>
+            <div class="radius-card">
+              <div class="radius-demo" style="border-radius: 999px"></div>
+              <div class="token">--r-full</div>
+              <div class="val">999px · pill</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ MOTIFS ═══ -->
+        <section class="specimen-section" id="motifs">
+          <div class="section-head">
+            <div class="num">v.<small>§ 05 · Motifs</small></div>
+            <div>
+              <h2>A small, <em>hand-drawn</em> library.</h2>
+              <p>
+                Six single-stroke SVG motifs, all set in
+                <code>currentColor</code> so they recolor with the
+                theme. Used as marginalia, dividers, and one-per-page
+                accents — never more than one motif in a single
+                viewport.
+              </p>
+            </div>
+          </div>
+          <div class="motifs">
+            <div class="motif-card">
+              <div class="motif-frame">
+                <svg viewBox="0 0 70 220" width="70" height="200"><use href="#i-wheat"/></svg>
+              </div>
+              <div class="name"><em>Wheat</em> stalk</div>
+              <div class="desc">
+                Spot illustration. Hangs in the hero margin; doubles
+                as the bakery reference without being cartoon bread.
+              </div>
+              <div class="id">#i-wheat</div>
+            </div>
+            <div class="motif-card">
+              <div class="motif-frame">
+                <svg viewBox="0 0 120 120" width="150" height="150"><use href="#i-twice"/></svg>
+              </div>
+              <div class="name">The <em>twice</em> motif</div>
+              <div class="desc">
+                Two offset circles — first bake, second bake. The
+                mark for pull quotes about method.
+              </div>
+              <div class="id">#i-twice</div>
+            </div>
+            <div class="motif-card">
+              <div class="motif-frame">
+                <svg viewBox="0 0 48 48" width="130" height="130"><use href="#i-flame"/></svg>
+              </div>
+              <div class="name"><em>Hearth</em> flame</div>
+              <div class="desc">
+                A small ornament for the process section — the
+                literal hearth, sitting in the lower corner.
+              </div>
+              <div class="id">#i-flame</div>
+            </div>
+            <div class="motif-card">
+              <div class="motif-frame">
+                <svg viewBox="0 0 160 160" width="170" height="170">
+                  <defs>
+                    <path id="specimenSealPath" d="M 80,80 m -62,0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0"/>
+                  </defs>
+                  <circle cx="80" cy="80" r="74" fill="none" stroke="currentColor" stroke-width="1"/>
+                  <circle cx="80" cy="80" r="68" fill="none" stroke="currentColor" stroke-width="1"/>
+                  <text style="font-family: var(--ff-label); font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase; fill: currentColor">
+                    <textPath href="#specimenSealPath" startOffset="0">TWICE BAKED SOFTWARE · EST MMXXVI · A BOUTIQUE OF TWO ·</textPath>
+                  </text>
+                  <text x="80" y="94" text-anchor="middle" style="font-family: var(--ff-display); font-style: italic; font-size: 42px; fill: var(--accent)">tb</text>
+                </svg>
+              </div>
+              <div class="name">The <em>seal</em></div>
+              <div class="desc">
+                Curved text around a ring using <code>textPath</code>.
+                Slow 80s rotation on the landing. The studio's stamp.
+              </div>
+              <div class="id">#seal (inline)</div>
+            </div>
+            <div class="motif-card">
+              <div class="motif-frame">
+                <svg viewBox="0 0 72 18" width="220" height="50"><use href="#i-fleuron"/></svg>
+              </div>
+              <div class="name"><em>Fleuron</em> divider</div>
+              <div class="desc">
+                Between-section ornament. Flanked by thin rules that
+                bleed to the container edges.
+              </div>
+              <div class="id">#i-fleuron</div>
+            </div>
+            <div class="motif-card">
+              <div class="motif-frame">
+                <svg viewBox="0 0 26 26" width="80" height="80"><use href="#i-logo"/></svg>
+              </div>
+              <div class="name">The <em>logomark</em></div>
+              <div class="desc">
+                The filled dot inside a ring. Reads as a seal stamp,
+                a loaf from above, or a printer's bullet — all three.
+              </div>
+              <div class="id">#i-logo</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ MOTION ═══ -->
+        <section class="specimen-section" id="motion">
+          <div class="section-head">
+            <div class="num">vi.<small>§ 06 · Motion</small></div>
+            <div>
+              <h2>Three durations, <em>one curve family.</em></h2>
+              <p>
+                Fast for hovers and toggles. Base for theme color
+                transitions. Slow — with a custom easing — for list
+                hovers and page reveals. Everything else sits still.
+              </p>
+            </div>
+          </div>
+          <div class="motion-list">
+            <div class="motion-card fast">
+              <div class="token">--t-fast</div>
+              <div class="name"><em>Fast</em></div>
+              <div class="val">0.2s · ease</div>
+              <div class="motion-demo"></div>
+            </div>
+            <div class="motion-card base">
+              <div class="token">--t-base</div>
+              <div class="name"><em>Base</em></div>
+              <div class="val">0.35s · ease</div>
+              <div class="motion-demo"></div>
+            </div>
+            <div class="motion-card slow">
+              <div class="token">--t-slow</div>
+              <div class="name"><em>Slow</em></div>
+              <div class="val">0.6s · cubic-bezier</div>
+              <div class="motion-demo"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ COMPONENTS ═══ -->
+        <section class="specimen-section" id="components">
+          <div class="section-head">
+            <div class="num">vii.<small>§ 07 · Components</small></div>
+            <div>
+              <h2>Built from <em>tokens, only.</em></h2>
+              <p>
+                A handful of small components composed entirely from
+                the tokens above. No magic numbers, no one-off
+                colors. If you can't express it in tokens, it's not a
+                pattern yet — it's a prototype.
+              </p>
+            </div>
+          </div>
+
+          <div class="components">
+            <div class="comp-card">
+              <div class="label">Buttons</div>
+              <div class="demo demo-btn-row">
+                <a class="btn-primary" href="#">Begin a project</a>
+                <a class="btn-ghost" href="#">See the practice →</a>
+                <span class="demo-tag">Now booking · Q3 2026</span>
+              </div>
+            </div>
+
+            <div class="comp-card">
+              <div class="label">Service row</div>
+              <div class="demo" style="padding: 0">
+                <div style="display: grid; grid-template-columns: 60px 1.4fr 2fr 1fr; gap: 36px; padding: 32px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); align-items: baseline">
+                  <div style="font-family: var(--ff-display); font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; font-size: 32px; color: var(--accent)">i.</div>
+                  <div style="font-family: var(--ff-display); font-variation-settings: 'opsz' 144, 'SOFT' 60; font-size: 32px; letter-spacing: -0.015em">Custom web apps</div>
+                  <div style="font-family: var(--ff-display); font-size: 15px; color: var(--ink-soft); line-height: 1.6">Booking systems, portals, members areas — the specific piece of software your business is quietly built around.</div>
+                  <div style="font-family: var(--ff-label); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-mute); text-align: right">
+                    <div>Scope</div>
+                    <div style="font-family: var(--ff-display); font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--ink); margin-top: 4px">Fixed fee</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-card">
+              <div class="label">Pull quote</div>
+              <div class="demo" style="text-align: center; padding: 40px 0">
+                <svg width="60" height="60" style="color: var(--accent); margin-bottom: 20px"><use href="#i-twice"/></svg>
+                <blockquote style="font-family: var(--ff-display); font-weight: 300; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em; max-width: 16ch; margin: 0 auto; font-variation-settings: 'opsz' 144, 'SOFT' 50">
+                  The second bake is where <em style="font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; color: var(--accent)">the work</em> becomes yours.
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ USAGE ═══ -->
+        <section class="specimen-section" id="usage">
+          <div class="section-head">
+            <div class="num">viii.<small>§ 08 · Usage</small></div>
+            <div>
+              <h2>Four <em>principles.</em></h2>
+              <p>
+                The rules that keep the system from drifting. Break
+                them deliberately; bend them slowly.
+              </p>
+            </div>
+          </div>
+          <div class="usage">
+            <div class="principle">
+              <div class="num">i.</div>
+              <h4>Tokens, <em>only.</em></h4>
+              <p>
+                Component CSS never references a hex value. If a new
+                color feels necessary, it belongs in the token
+                system first, the component second.
+              </p>
+            </div>
+            <div class="principle">
+              <div class="num">ii.</div>
+              <h4>One <em>accent</em> per viewport.</h4>
+              <p>
+                At any scroll position, the eye should land on one
+                accent phrase, one accent motif — not a scatter.
+                Restraint is the whole design.
+              </p>
+            </div>
+            <div class="principle">
+              <div class="num">iii.</div>
+              <h4>WONK for <em>emphasis</em> only.</h4>
+              <p>
+                The italic alternate glyphs are reserved for the
+                word being emphasized. Using them for full
+                paragraphs kills the effect and looks like novelty.
+              </p>
+            </div>
+            <div class="principle">
+              <div class="num">iv.</div>
+              <h4>Dark mode is the <em>same</em> design.</h4>
+              <p>
+                Layout, type scale, motif placement, and rhythm do
+                not change between modes. Only the color tokens
+                swap. If a section falls apart in dark, the problem
+                is the section, not the mode.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="foot">
+          <div>© MMXXVI · Twice Baked Software</div>
+          <div><em>Specimen book, first edition</em></div>
+          <div>Set in Fraunces &amp; DM Sans</div>
+        </div>
+      </footer>
+    </div>
+
+    <nav class="theme-switcher" aria-label="Page switcher">
+      <span class="theme-switcher-label">Pages</span>
+      <a href="hearth.html">01 Landing</a>
+      <a href="tokens.html" class="active">02 Tokens</a>
+    </nav>
+
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const stored = localStorage.getItem("tbs-theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        setMode(stored || (prefersDark ? "dark" : "light"));
+        document.querySelectorAll(".mode-toggle button").forEach((btn) => {
+          btn.addEventListener("click", () => setMode(btn.dataset.mode));
+        });
+        function setMode(mode) {
+          root.setAttribute("data-theme", mode);
+          localStorage.setItem("tbs-theme", mode);
+          document
+            .querySelectorAll(".mode-toggle button")
+            .forEach((b) =>
+              b.setAttribute(
+                "aria-pressed",
+                b.dataset.mode === mode ? "true" : "false"
+              )
+            );
+        }
+      })();
+    </script>
+  </body>
+</html>

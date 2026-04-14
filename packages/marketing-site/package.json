@@ -24,5 +24,16 @@
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   },
-  "type": "module"
+  "type": "module",
+  "nx": {
+    "name": "marketing-site",
+    "targets": {
+      "deploy": {
+        "executor": "nx-github-pages:deploy",
+        "options": {
+          "directory": "{projectRoot}/dist/client"
+        }
+      }
+    }
+  }
 }
