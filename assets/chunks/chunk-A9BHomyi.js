@@ -1,0 +1,1 @@
+function i(t,e){if(typeof window>"u")return;const n={event:t,...e};window.dataLayer?.push(n),window.plausible?.(t,{props:e}),window.dispatchEvent(new CustomEvent("twicebaked:analytics",{detail:n}))}export{i as t};
