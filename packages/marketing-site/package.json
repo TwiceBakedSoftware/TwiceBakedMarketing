@@ -31,7 +31,8 @@
       "deploy": {
         "executor": "nx-github-pages:deploy",
         "options": {
-          "directory": "{projectRoot}/dist/client"
+          "directory": "{projectRoot}/dist/client",
+          "CNAME": "twicebakedsoftware.com"
         }
       }
     }
